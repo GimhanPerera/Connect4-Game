@@ -42,6 +42,16 @@ int main() {
 	{		
 		window.clear(); 
 		sf::Event event;
+		//
+		sf::Font font;
+		font.loadFromFile("font.ttf");
+		sf::Text text;
+		text.setFont(font);
+		string num[]={"1","2","3","4","5","6","7"};
+		text.setColor(sf::Color::White);
+		text.setString("");
+		text.setCharacterSize(80);
+		//
 		while (window.pollEvent(event)) 
 		{			
 			switch (event.type)
@@ -85,6 +95,9 @@ int main() {
 				window.draw(grid);
 				drawCircle(j, i);//Display wena circles tika methanin check karala ganna
 			}
+			text.setString(num[i]);
+			text.setPosition(sf::Vector2f(50 + grid_size * i, 620));
+			window.draw(text);
 		}
 		//end_Draw stuffs here
 		window.display();
