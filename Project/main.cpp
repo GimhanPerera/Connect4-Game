@@ -15,8 +15,9 @@ void recordTheInput(int);
 sf::RenderWindow window(sf::VideoMode(scr_width, scr_height), "SFML Work");
 
 //Gamelogic data
+void checkWiner(int, int);
 string player, player1 = "Hello1", player2 = "Hello2";
-int x[6][7];
+int x[6][7]; 
 int point[] = { 5,5,5,5,5,5,5 };
 int win = 0;
 //
@@ -38,25 +39,41 @@ int main() {
 	//end_Grid
 	window.setFramerateLimit(15);
 	while (window.isOpen())
-	{
-		window.clear();
+	{		
+		window.clear(); 
 		sf::Event event;
-		while (window.pollEvent(event))
-		{
+		while (window.pollEvent(event)) 
+		{			
 			switch (event.type)
 			{
 			case sf::Event::Closed:
 				window.close();
 				break;
 			case sf::Event::KeyPressed:
-				if (player==player && event.key.code > 26 && event.key.code < 34)//GET INPUT //Num1=27
+				if (win==0 &&event.key.code > 26 && event.key.code < 34)//GET INPUT //Num1=27
 				{
-					cout << event.key.code << endl;
+					cout << event.key.code << endl;//Testing porposes
 					recordTheInput(event.key.code-26);
 					break;
 				}
+				if (event.key.code == sf::Keyboard::Space)//Space code is 57
+				{
+					win = 0;
+					player = player1;
+					for (int i = 0; i < 6; i++)
+					{
+						point[i] = 5;
+					}
+					for (int i = 0; i < 6; i++) //Assign '0' to every x
+					{
+						for (int t = 0; t < 7; t++)
+						{
+							x[i][t] = 0;
+						}
+					}
+				}
 				break;
-			}
+			}			
 		}
 
 		//Draw stuffs here
@@ -72,7 +89,7 @@ int main() {
 		//end_Draw stuffs here
 		window.display();
 	}
-
+	
 	return 0;
 }
 
@@ -96,13 +113,153 @@ void recordTheInput(int index)
 	if (player == player1)
 	{
 		x[point[index]][index] = 1;
+		checkWiner(point[index], index);
 		player = player2;
 	}
 	else if (player == player2)
 	{
 		x[point[index]][index] = 2;
+		checkWiner(point[index], index);
 		player = player1;
 	}
 	point[index]--;
 }
 
+void checkWiner(int row, int column)//Half done
+{
+	int coun = 1, condition = 1, y = row, z = column, n = 0;
+	if (row < 3)//Down form last entered
+	{
+		while (1)
+		{
+			if (x[y][column] == x[y + 1][column])
+				coun++;
+			else
+				break;
+			if (coun == 4)
+			{cout << ".........WIN.1..........."<<endl;//Testing purpose
+				win = 1;
+				break;
+			}
+			y++;
+		}
+	}
+
+	y = row; coun = 1;
+	while (win == 0)//Left form last entered
+	{
+		if ((z - 1) >= 0)
+		{
+			if (x[y][z] == x[y][z - 1])
+				coun++;
+			else
+				break;
+			if (coun == 4)
+			{cout << ".........WIN.2..........."<<endl;//Testing purpose
+				win = 1;
+				break;
+			}
+			z--;
+		}
+		else
+			break;
+	}
+	z = column;
+	while (win == 0)//Right form last entered
+	{
+		if ((z + 1) <= 6)
+		{
+			if (x[y][z] == x[y][z + 1])
+				coun++;
+			else
+				break;
+			if (coun == 4)
+			{cout << ".........WIN.3..........."<<endl;//Testing purpose
+				win = 1;
+				break;
+			}
+			z++;
+		}
+		else
+			break;
+	}
+	
+	y = row; z = column; coun = 1;
+
+	while (win == 0)//Left Down form last entered
+	{
+		if ( (y + 1) <= 5 && (z - 1) >= 0 )
+		{
+			if (x[y][z] == x[y+1][z - 1])
+				coun++;
+			else
+				break;
+			if (coun == 4)
+			{cout << ".........WIN.4..........."<<endl;//Testing purpose
+				win = 1;
+				break;
+			}
+			z--; y++;
+		}
+		else
+			break;
+	}
+	y = row; z = column;
+	while (win == 0)//Right Up form last entered
+	{
+		if ((y - 1) >= 0 && (z + 1) <= 6)
+		{
+			if (x[y][z] == x[y - 1][z + 1])
+				coun++;
+			else
+				break;
+			if (coun == 4)
+			{cout << ".........WIN.5..........."<<endl;//Testing purpose
+				win = 1;
+				break;
+			}
+			z++; y--;
+		}
+		else
+			break;
+	}
+
+	y = row; z = column; coun = 1;
+	while (win == 0)//Left Up form last entered
+	{
+		if ((y - 1) <= 5 && (z - 1) >= 0)
+		{
+			if (x[y][z] == x[y - 1][z - 1])
+				coun++;
+			else
+				break;
+			if (coun == 4)
+			{cout << ".........WIN.6..........."<<endl;//Testing purpose
+				win = 1;
+				break;
+			}
+			z--; y--;
+		}
+		else
+			break;
+	}
+	y = row; z = column;
+	while (win == 0)//Right Down form last entered
+	{
+		if ((y + 1) >= 0 && (z + 1) <= 6)
+		{
+			if (x[y][z] == x[y + 1][z + 1])
+				coun++;
+			else
+				break;
+			if (coun == 4)
+			{cout << ".........WIN.7..........."<<endl;//Testing purpose
+				win = 1;
+				break;
+			}
+			z++; y++;
+		}
+		else
+			break;
+	}
+}
