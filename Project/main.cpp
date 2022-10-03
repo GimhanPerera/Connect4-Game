@@ -16,7 +16,7 @@ sf::RenderWindow window(sf::VideoMode(scr_width, scr_height), "SFML Work");
 
 //Gamelogic data
 string player, player1 = "Hello1", player2 = "Hello2";
-int x[6][7]; 
+int x[6][7];
 int point[] = { 5,5,5,5,5,5,5 };
 int win = 0;
 //
@@ -38,11 +38,11 @@ int main() {
 	//end_Grid
 	window.setFramerateLimit(15);
 	while (window.isOpen())
-	{		
-		window.clear(); 
+	{
+		window.clear();
 		sf::Event event;
-		while (window.pollEvent(event)) 
-		{			
+		while (window.pollEvent(event))
+		{
 			switch (event.type)
 			{
 			case sf::Event::Closed:
@@ -56,15 +56,7 @@ int main() {
 					break;
 				}
 				break;
-				/*switch (event.key.code)//GET INPUT //Num1=27
-				{
-				case sf::Keyboard::Num1:
-					cout << sf::Keyboard::Num1 << endl;
-					recordTheInput(1);
-					break;				
-				}
-				break; */
-			}			
+			}
 		}
 
 		//Draw stuffs here
@@ -77,17 +69,10 @@ int main() {
 				drawCircle(j, i);//Display wena circles tika methanin check karala ganna
 			}
 		}
-		//Draw circle
-
-		//circle.getFillColor(sf::Color::Red);
-		//circle.setPosition(sf::Vector2f(150.0, 50.0));
-		//window.draw(circle);
-		//End_draw position 
-		
 		//end_Draw stuffs here
 		window.display();
 	}
-	
+
 	return 0;
 }
 
@@ -111,32 +96,13 @@ void recordTheInput(int index)
 	if (player == player1)
 	{
 		x[point[index]][index] = 1;
-		//checkWiner('X', index);
 		player = player2;
 	}
 	else if (player == player2)
 	{
 		x[point[index]][index] = 2;
-		//checkWiner('O', index);
 		player = player1;
 	}
 	point[index]--;
 }
 
-void addText()//Not work yet
-{
-	Font font;
-	Text text;
-	font.loadFromFile("arial.ttf");
-	text.setFont(font); // font is a sf::Font
-	// set the string to display
-	text.setString("Hello world");
-	// set the character size
-	text.setCharacterSize(24); // in pixels, not points!
-	// set the color
-	text.setFillColor(sf::Color::Red);
-	// set the text style
-	text.setStyle(Text::Bold | Text::Underlined);
-
-	window.draw(text);
-}
