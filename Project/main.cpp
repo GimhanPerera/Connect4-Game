@@ -37,21 +37,28 @@ int main() {
 	grid.setOutlineThickness(2.0f);
 	grid.setOutlineColor(sf::Color::White);
 	//end_Grid
+	//Title
+	sf::Texture texture;
+	sf::Sprite title;
+	texture.loadFromFile("titleimg1.JPG");
+	title.setTexture(texture);
+	title.setPosition(770,20);
+	//
+	//Numbers
+	sf::Font font;
+	font.loadFromFile("font.ttf");
+	sf::Text text;
+	text.setFont(font);
+	string num[]={"1","2","3","4","5","6","7"};
+	//text.setColor(sf::Color::White);
+	text.setString("");
+	text.setCharacterSize(80);
+	//
 	window.setFramerateLimit(15);
 	while (window.isOpen())
 	{		
 		window.clear(); 
 		sf::Event event;
-		//
-		sf::Font font;
-		font.loadFromFile("font.ttf");
-		sf::Text text;
-		text.setFont(font);
-		string num[]={"1","2","3","4","5","6","7"};
-		text.setColor(sf::Color::White);
-		text.setString("");
-		text.setCharacterSize(80);
-		//
 		while (window.pollEvent(event)) 
 		{			
 			switch (event.type)
@@ -66,11 +73,11 @@ int main() {
 					recordTheInput(event.key.code-26);
 					break;
 				}
-				if (event.key.code == sf::Keyboard::Space)//Space code is 57
+				if (event.key.code == sf::Keyboard::Space)//Space code is 57, RESET the program
 				{
 					win = 0;
 					player = player1;
-					for (int i = 0; i < 6; i++)
+					for (int i = 0; i < 7; i++)
 					{
 						point[i] = 5;
 					}
@@ -99,6 +106,7 @@ int main() {
 			text.setPosition(sf::Vector2f(50 + grid_size * i, 620));
 			window.draw(text);
 		}
+		window.draw(title);
 		//end_Draw stuffs here
 		window.display();
 	}
