@@ -1,7 +1,7 @@
 [Project]
 FileName=Project1.dev
 Name=Project1
-Type=1
+Type=0
 Ver=2
 ObjFiles=
 Includes="D:\UoK\5. UoK Modules\INTE 11223 - Programming concept\GROUP PROJECT\SFML setupfile\For Dev C+\SFML-2.4.0-windows-gcc-4.9.2-tdm-64-bit\SFML-2.4.0\include"

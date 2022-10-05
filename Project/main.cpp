@@ -16,7 +16,7 @@ sf::RenderWindow window(sf::VideoMode(scr_width, scr_height), "SFML Work");
 
 //Gamelogic data
 void checkWiner(int, int);
-string player, player1 = "Hello1", player2 = "Hello2";
+string player, player1 = "Red player", player2 = "Yellow player", winner;
 int x[6][7]; 
 int point[] = { 5,5,5,5,5,5,5 };
 int win = 0;
@@ -41,31 +41,41 @@ int main() {
 	grid.setFillColor(sf::Color::Transparent);
 	grid.setOutlineThickness(2.0f);
 	grid.setOutlineColor(sf::Color::White);
-	//end_Grid
 	//Title
 	sf::Texture texture;
 	sf::Sprite title;
 	texture.loadFromFile("titleimg1.JPG");
 	title.setTexture(texture);
 	title.setPosition(770,20);
-	//
-	//Numbers
+	//Connect fonts
 	sf::Font font;
 	font.loadFromFile("font.ttf");
+	sf::Font font2;
+	font2.loadFromFile("Milky Coffee.ttf");
+	//Numbers
 	sf::Text text;
 	text.setFont(font);
 	string num[]={"1","2","3","4","5","6","7"};
-	//text.setColor(sf::Color::White);
 	text.setString("");
 	text.setCharacterSize(80);
-	//
 	//Status
 	sf::Text status;
 	status.setFont(font);
-	//
-	//text.setColor(sf::Color::White);
 	status.setString("");
 	status.setCharacterSize(50);
+	//win text
+	sf::Text winText;
+	winText.setFont(font2);
+	winText.setString("WIN");
+	winText.setCharacterSize(150);
+	winText.setPosition(810,570);
+	//
+	//winner name
+	sf::Text winName;
+	winName.setFont(font2);
+	winName.setString("");
+	winName.setCharacterSize(50);
+	winName.setPosition(810,535);
 	//
 	window.setFramerateLimit(15);
 	while (window.isOpen())
@@ -105,7 +115,6 @@ int main() {
 				break;
 			}			
 		}
-
 		//Draw stuffs here
 		for (int i = 0; i < col_size; i++)
 		{
@@ -123,7 +132,12 @@ int main() {
 		if(win!=0)
 		{
 			if(win==1)
+			{
+				winName.setString(winner);
+				window.draw(winName);
+				window.draw(winText);
 				status.setString("Press SPACE to start new game");
+			}
 			else
 				status.setString("GAME DRAW, Press SPACE to start new game");
 			status.setCharacterSize(30);
@@ -220,25 +234,28 @@ void drawCircle(int row,int colomn)
 void recordTheInput(int index)
 {	index--;
 	if(point[index]>=0)
-	{cout<<point[index]<<" start--end "<<endl;
-		
+	{		
 		if (player == player1)
 		{
 			x[point[index]][index] = 1;
 			checkWiner(point[index], index);
+			if(win==1)
+				winner=player1;
 			player = player2;
 		}
 		else if (player == player2)
 		{
 			x[point[index]][index] = 2;
 			checkWiner(point[index], index);
+			if(win==1)
+				winner=player2;
 			player = player1;
 		}
 		point[index]--;
 	}	
 }
 
-void checkWiner(int row, int column)//Half done
+void checkWiner(int row, int column)//Game LOGIC part.
 {
 	int coun = 1, condition = 1, y = row, z = column, n = 0;
 	start_row = row;end_row = row;
@@ -270,7 +287,7 @@ void checkWiner(int row, int column)//Half done
 		{
 			if (x[y][z] == x[y][z - 1])
 			{
-				end_col=z-1;//cout<<start_col<<" start end 1 "<<end_col<<endl;
+				end_col=z-1;
 				coun++;
 			}
 			else
@@ -337,7 +354,6 @@ void checkWiner(int row, int column)//Half done
 		else
 			break;
 	}
-	//end_row=y;end_col=z;
 	cout<<end_row<<" start end 2 "<<end_col<<endl;
 	y = row; z = column;
 	while (win == 0)//Right Up form last entered
