@@ -7,12 +7,12 @@ using namespace sf;
 void drawCircle(int, int);
 void recordTheInput(int);
 #define scr_width 1200
-#define scr_height 850
+#define scr_height 750
 #define grid_size 100
 #define row_size 6
 #define col_size 7
 #define margin 20
-sf::RenderWindow window(sf::VideoMode(scr_width, scr_height), "SFML Work");
+sf::RenderWindow window(sf::VideoMode(scr_width, scr_height), "Connect Four");
 
 //Gamelogic data
 void checkWiner(int, int);
@@ -60,22 +60,22 @@ int main() {
 	text.setCharacterSize(80);
 	//Status
 	sf::Text status;
-	status.setFont(font);
+	status.setFont(font2);
 	status.setString("");
 	status.setCharacterSize(50);
 	//win text
 	sf::Text winText;
 	winText.setFont(font2);
-	winText.setString("WIN");
+	winText.setString("WIN!");
 	winText.setCharacterSize(150);
-	winText.setPosition(810,570);
+	winText.setPosition(810,385);
 	//
 	//winner name
 	sf::Text winName;
 	winName.setFont(font2);
 	winName.setString("");
 	winName.setCharacterSize(50);
-	winName.setPosition(810,535);
+	winName.setPosition(810,350);
 	//
 	window.setFramerateLimit(15);
 	while (window.isOpen())
@@ -133,15 +133,20 @@ int main() {
 		{
 			if(win==1)
 			{
+				if(player == player2)
+					winName.setFillColor(sf::Color(247, 52, 52));
+				if(player == player1)
+					winName.setFillColor(sf::Color(250, 200, 50));
 				winName.setString(winner);
 				window.draw(winName);
 				window.draw(winText);
 				status.setString("Press SPACE to start new game");
 			}
 			else
-				status.setString("GAME DRAW, Press SPACE to start new game");
+				status.setString("GAME DRAW,\n Press SPACE to start new game");
 			status.setCharacterSize(30);
-			status.setPosition(170,720);
+			status.setPosition(750,180);
+			status.setFillColor(sf::Color(255,255,255));
 			//change color
 			color=11;
 			if (start_col == end_col)
@@ -189,11 +194,17 @@ int main() {
 		else
 		{
 			if(player == player1)
-				status.setString("Player red");
+			{
+				status.setString("\t  RED\nPlayer Turn ");
+				status.setFillColor(sf::Color(247, 52, 52));
+			}	
 			else
-				status.setString("Player yellow");
+			{
+				status.setString("  YELLOW\nPlayer Turn ");
+				status.setFillColor(sf::Color(250, 200, 50));
+			}				
 			status.setCharacterSize(40);
-			status.setPosition(250,720);
+			status.setPosition(850,150);
 		}
 		window.draw(status);
 		//end_Draw stuffs here
