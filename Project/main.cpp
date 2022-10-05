@@ -20,6 +20,11 @@ string player, player1 = "Hello1", player2 = "Hello2";
 int x[6][7]; 
 int point[] = { 5,5,5,5,5,5,5 };
 int win = 0;
+int start_col = 0;
+int start_row = 0;
+int end_col = 0;
+int end_row = 0;
+int color=0;
 //
 
 int main() {
@@ -53,6 +58,14 @@ int main() {
 	//text.setColor(sf::Color::White);
 	text.setString("");
 	text.setCharacterSize(80);
+	//
+	//Status
+	sf::Text status;
+	status.setFont(font);
+	//
+	//text.setColor(sf::Color::White);
+	status.setString("");
+	status.setCharacterSize(50);
 	//
 	window.setFramerateLimit(15);
 	while (window.isOpen())
@@ -107,6 +120,68 @@ int main() {
 			window.draw(text);
 		}
 		window.draw(title);
+		if(win!=0)
+		{
+			if(win==1)
+				status.setString("Press SPACE to start new game");
+			else
+				status.setString("GAME DRAW, Press SPACE to start new game");
+			status.setCharacterSize(30);
+			status.setPosition(170,720);
+			//change color
+			color=11;
+			if (start_col == end_col)
+			{				
+				if (x[start_row][start_col] == 2)
+					color = 22;
+				while (start_row <= end_row)
+				{
+					x[start_row][start_col] = color;
+					start_row++;
+				}
+			}
+			else if (start_row == end_row)
+			{
+				if (x[start_row][start_col] == 2)
+					color = 22;
+				while (end_col <= start_col)
+				{
+					x[start_row][end_col] = color;
+					end_col++;
+				}
+			}
+			else if (start_row < end_row && start_col > end_col)
+			{
+				if (x[start_row][start_col] == 2)
+					color = 22;
+				while (end_col <= start_col)
+				{
+					x[start_row][start_col] = color;
+					start_row++;start_col--;
+				}
+			}
+			else if (start_row < end_row && start_col < end_col)
+			{
+				if (x[start_row][start_col] == 2)
+					color = 22;
+				while (start_col <= end_col)
+				{
+					x[start_row][start_col] = color;
+					start_row++;start_col++;
+				}
+			}
+			//
+		}
+		else
+		{
+			if(player == player1)
+				status.setString("Player red");
+			else
+				status.setString("Player yellow");
+			status.setCharacterSize(40);
+			status.setPosition(250,720);
+		}
+		window.draw(status);
 		//end_Draw stuffs here
 		window.display();
 	}
@@ -120,45 +195,66 @@ void drawCircle(int row,int colomn)
 	{
 		sf::CircleShape circle(49);
 		circle.setPosition(sf::Vector2f(margin + colomn * 100, margin + row * 100));
-		if(x[row][colomn] != 1)
-			circle.setFillColor(sf::Color(250, 200, 50));
-		if (x[row][colomn] != 2)
-			circle.setFillColor(sf::Color(247, 52, 52));
+		if (x[row][colomn] == 1)
+			circle.setFillColor(sf::Color(247, 52, 52)); //red
+		if(x[row][colomn] == 2)
+			circle.setFillColor(sf::Color(250, 200, 50)); //yellow
+		if (x[row][colomn] == 11)
+			circle.setFillColor(sf::Color(166, 10, 10)); //dark red
+		if (x[row][colomn] == 22)
+			circle.setFillColor(sf::Color(138, 104, 4)); //dark yellow
 		window.draw(circle);
+	}
+	else if(win == 0)//Check wether game drow
+	{
+		for(int i=0;i<=6;i++)
+		{
+			if (point[i]!=0)
+				break;
+			if(point[6]==0)
+				win=2;	
+		}
 	}
 }
 
 void recordTheInput(int index)
-{
-	index--;
-	if (player == player1)
-	{
-		x[point[index]][index] = 1;
-		checkWiner(point[index], index);
-		player = player2;
-	}
-	else if (player == player2)
-	{
-		x[point[index]][index] = 2;
-		checkWiner(point[index], index);
-		player = player1;
-	}
-	point[index]--;
+{	index--;
+	if(point[index]>=0)
+	{cout<<point[index]<<" start--end "<<endl;
+		
+		if (player == player1)
+		{
+			x[point[index]][index] = 1;
+			checkWiner(point[index], index);
+			player = player2;
+		}
+		else if (player == player2)
+		{
+			x[point[index]][index] = 2;
+			checkWiner(point[index], index);
+			player = player1;
+		}
+		point[index]--;
+	}	
 }
 
 void checkWiner(int row, int column)//Half done
 {
 	int coun = 1, condition = 1, y = row, z = column, n = 0;
+	start_row = row;end_row = row;
+	start_col = column;end_col = column;
 	if (row < 3)//Down form last entered
 	{
 		while (1)
 		{
+			end_col = column;
 			if (x[y][column] == x[y + 1][column])
 				coun++;
 			else
 				break;
 			if (coun == 4)
 			{cout << ".........WIN.1..........."<<endl;//Testing purpose
+				end_row = y + 1;				
 				win = 1;
 				break;
 			}
@@ -169,10 +265,14 @@ void checkWiner(int row, int column)//Half done
 	y = row; coun = 1;
 	while (win == 0)//Left form last entered
 	{
+		end_row = row; end_col=column;
 		if ((z - 1) >= 0)
 		{
 			if (x[y][z] == x[y][z - 1])
+			{
+				end_col=z-1;//cout<<start_col<<" start end 1 "<<end_col<<endl;
 				coun++;
+			}
 			else
 				break;
 			if (coun == 4)
@@ -185,13 +285,18 @@ void checkWiner(int row, int column)//Half done
 		else
 			break;
 	}
+	if(win==0) //special porpose
+		end_col=z;
 	z = column;
 	while (win == 0)//Right form last entered
 	{
 		if ((z + 1) <= 6)
 		{
 			if (x[y][z] == x[y][z + 1])
+			{
 				coun++;
+				start_col=z+1;
+			}				
 			else
 				break;
 			if (coun == 4)
@@ -206,13 +311,20 @@ void checkWiner(int row, int column)//Half done
 	}
 	
 	y = row; z = column; coun = 1;
-
+	if(win==0) //special porpose
+	{
+		start_row = row; end_row=row;
+		start_col = column; end_col=column;
+	}
 	while (win == 0)//Left Down form last entered
 	{
 		if ( (y + 1) <= 5 && (z - 1) >= 0 )
 		{
 			if (x[y][z] == x[y+1][z - 1])
+			{
+				end_row=y+1;end_col=z-1;
 				coun++;
+			}
 			else
 				break;
 			if (coun == 4)
@@ -225,13 +337,18 @@ void checkWiner(int row, int column)//Half done
 		else
 			break;
 	}
+	//end_row=y;end_col=z;
+	cout<<end_row<<" start end 2 "<<end_col<<endl;
 	y = row; z = column;
 	while (win == 0)//Right Up form last entered
 	{
 		if ((y - 1) >= 0 && (z + 1) <= 6)
 		{
 			if (x[y][z] == x[y - 1][z + 1])
+			{
+				start_row=y-1;start_col=z+1;
 				coun++;
+			}
 			else
 				break;
 			if (coun == 4)
@@ -244,14 +361,23 @@ void checkWiner(int row, int column)//Half done
 		else
 			break;
 	}
-
+	
+	if(win==0) //special porpose
+	{
+		start_row = row; end_row=row;
+		start_col = column; end_col=column;
+	}
 	y = row; z = column; coun = 1;
 	while (win == 0)//Left Up form last entered
 	{
 		if ((y - 1) <= 5 && (z - 1) >= 0)
 		{
 			if (x[y][z] == x[y - 1][z - 1])
+			{
+				start_row = y-1;
+				start_col = z-1;
 				coun++;
+			}
 			else
 				break;
 			if (coun == 4)
@@ -270,7 +396,11 @@ void checkWiner(int row, int column)//Half done
 		if ((y + 1) >= 0 && (z + 1) <= 6)
 		{
 			if (x[y][z] == x[y + 1][z + 1])
+			{
+				end_row = y+1;
+				end_col = z+1;
 				coun++;
+			}
 			else
 				break;
 			if (coun == 4)
